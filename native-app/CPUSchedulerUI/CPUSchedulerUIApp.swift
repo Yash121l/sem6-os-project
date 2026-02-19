@@ -3,12 +3,26 @@ import SwiftUI
 @main
 struct CPUSchedulerUIApp: App {
     @StateObject private var preferences = PreferencesService()
+    @StateObject private var liveProcessStore = LiveProcessWhatIfStore()
 
     var body: some Scene {
         WindowGroup {
             MainWindowView()
                 .environmentObject(preferences)
+                .environmentObject(liveProcessStore)
                 .frame(minWidth: 1100, minHeight: 700)
+                .onAppear {
+                    liveProcessStore.configure(
+                        autoRefreshEnabled: preferences.liveWhatIfAutoRefreshEnabled,
+                        refreshIntervalSeconds: preferences.liveWhatIfRefreshIntervalSeconds
+                    )
+                }
+                .onChange(of: preferences.liveWhatIfAutoRefreshEnabled) { _, newValue in
+                    liveProcessStore.autoRefreshEnabled = newValue
+                }
+                .onChange(of: preferences.liveWhatIfRefreshIntervalSeconds) { _, newValue in
+                    liveProcessStore.refreshIntervalSeconds = newValue
+                }
         }
         .windowStyle(.titleBar)
         .windowToolbarStyle(.unified(showsTitle: true))
@@ -39,6 +53,7 @@ struct CPUSchedulerUIApp: App {
         Settings {
             SettingsView()
                 .environmentObject(preferences)
+                .environmentObject(liveProcessStore)
         }
     }
 }

@@ -35,6 +35,16 @@
 		A10026 /* TutorialViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10026 /* TutorialViewModel.swift */; };
 		A10027 /* MockDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10027 /* MockDataService.swift */; };
 		A10028 /* PreferencesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10028 /* PreferencesService.swift */; };
+		A10038 /* LiveProcessWhatIfStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10040 /* LiveProcessWhatIfStore.swift */; };
+		A10039 /* LiveProcessPickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10041 /* LiveProcessPickerSheet.swift */; };
+		A10030 /* BackendSchedulingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10031 /* BackendSchedulingService.swift */; };
+		A10031 /* SchedulerBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = B10032 /* SchedulerBridge.mm */; };
+		A10032 /* ProcessMonitorBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = B10033 /* ProcessMonitorBridge.mm */; };
+		A10033 /* TypeConverters.mm in Sources */ = {isa = PBXBuildFile; fileRef = B10034 /* TypeConverters.mm */; };
+		A10034 /* scheduler.c in Sources */ = {isa = PBXBuildFile; fileRef = B10035 /* scheduler.c */; };
+		A10035 /* metrics.c in Sources */ = {isa = PBXBuildFile; fileRef = B10036 /* metrics.c */; };
+		A10036 /* process_monitor.c in Sources */ = {isa = PBXBuildFile; fileRef = B10037 /* process_monitor.c */; };
+		A10037 /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = B10038 /* utils.c */; };
 		A10029 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B10029 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -69,6 +79,17 @@
 		B10028 /* PreferencesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesService.swift; sourceTree = "<group>"; };
 		B10029 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B10030 /* CPUSchedulerUI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CPUSchedulerUI.entitlements; sourceTree = "<group>"; };
+		B10031 /* BackendSchedulingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendSchedulingService.swift; sourceTree = "<group>"; };
+		B10032 /* SchedulerBridge.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Bridge/SchedulerBridge.mm; sourceTree = "<group>"; };
+		B10033 /* ProcessMonitorBridge.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Bridge/ProcessMonitorBridge.mm; sourceTree = "<group>"; };
+		B10034 /* TypeConverters.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Bridge/TypeConverters.mm; sourceTree = "<group>"; };
+		B10035 /* scheduler.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Core/scheduler.c; sourceTree = "<group>"; };
+		B10036 /* metrics.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Core/metrics.c; sourceTree = "<group>"; };
+		B10037 /* process_monitor.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Core/process_monitor.c; sourceTree = "<group>"; };
+		B10038 /* utils.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Core/utils.c; sourceTree = "<group>"; };
+		B10039 /* CPUSchedulerUI-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CPUSchedulerUI-Bridging-Header.h"; sourceTree = "<group>"; };
+		B10040 /* LiveProcessWhatIfStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveProcessWhatIfStore.swift; sourceTree = "<group>"; };
+		B10041 /* LiveProcessPickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveProcessPickerSheet.swift; sourceTree = "<group>"; };
 		C10001 /* CPUSchedulerUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CPUSchedulerUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -87,6 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				E10002 /* CPUSchedulerUI */,
+				E10021 /* CPUSchedulerBackend */,
 				E10020 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -96,6 +118,7 @@
 			children = (
 				B10001 /* CPUSchedulerUIApp.swift */,
 				B10030 /* CPUSchedulerUI.entitlements */,
+				B10039 /* CPUSchedulerUI-Bridging-Header.h */,
 				E10003 /* Models */,
 				E10004 /* ViewModels */,
 				E10005 /* Views */,
@@ -149,9 +172,25 @@
 			isa = PBXGroup;
 			children = (
 				B10027 /* MockDataService.swift */,
+				B10031 /* BackendSchedulingService.swift */,
 				B10028 /* PreferencesService.swift */,
+				B10040 /* LiveProcessWhatIfStore.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		E10021 /* CPUSchedulerBackend */ = {
+			isa = PBXGroup;
+			children = (
+				B10032 /* SchedulerBridge.mm */,
+				B10033 /* ProcessMonitorBridge.mm */,
+				B10034 /* TypeConverters.mm */,
+				B10035 /* scheduler.c */,
+				B10036 /* metrics.c */,
+				B10037 /* process_monitor.c */,
+				B10038 /* utils.c */,
+			);
+			path = ../CPUSchedulerBackend/Sources;
 			sourceTree = "<group>";
 		};
 		E10007 /* Simulator */ = {
@@ -160,6 +199,7 @@
 				B10003 /* SimulatorView.swift */,
 				B10004 /* AddProcessSheet.swift */,
 				B10005 /* ScenarioPickerSheet.swift */,
+				B10041 /* LiveProcessPickerSheet.swift */,
 			);
 			path = Simulator;
 			sourceTree = "<group>";
@@ -336,7 +376,17 @@
 				A10025 /* MonitorViewModel.swift in Sources */,
 				A10026 /* TutorialViewModel.swift in Sources */,
 				A10027 /* MockDataService.swift in Sources */,
+				A10030 /* BackendSchedulingService.swift in Sources */,
 				A10028 /* PreferencesService.swift in Sources */,
+				A10038 /* LiveProcessWhatIfStore.swift in Sources */,
+				A10039 /* LiveProcessPickerSheet.swift in Sources */,
+				A10031 /* SchedulerBridge.mm in Sources */,
+				A10032 /* ProcessMonitorBridge.mm in Sources */,
+				A10033 /* TypeConverters.mm in Sources */,
+				A10034 /* scheduler.c in Sources */,
+				A10035 /* metrics.c in Sources */,
+				A10036 /* process_monitor.c in Sources */,
+				A10037 /* utils.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -478,6 +528,12 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../CPUSchedulerBackend/Sources/Core",
+					"$(SRCROOT)/../CPUSchedulerBackend/Sources/Bridge",
+					"$(SRCROOT)/../CPUSchedulerBackend/Sources/Include",
+				);
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -487,6 +543,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cpuscheduler.visualizer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) USE_CPU_BACKEND";
+				SWIFT_OBJC_BRIDGING_HEADER = CPUSchedulerUI/CPUSchedulerUI-Bridging-Header.h;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -507,6 +565,12 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../CPUSchedulerBackend/Sources/Core",
+					"$(SRCROOT)/../CPUSchedulerBackend/Sources/Bridge",
+					"$(SRCROOT)/../CPUSchedulerBackend/Sources/Include",
+				);
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -516,6 +580,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cpuscheduler.visualizer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) USE_CPU_BACKEND";
+				SWIFT_OBJC_BRIDGING_HEADER = CPUSchedulerUI/CPUSchedulerUI-Bridging-Header.h;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};

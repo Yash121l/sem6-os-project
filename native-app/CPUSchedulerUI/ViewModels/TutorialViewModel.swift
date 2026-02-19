@@ -8,6 +8,8 @@ class TutorialViewModel: ObservableObject {
     @Published var currentStepIndex: Int = 0
     @Published var quizAnswers: [UUID: Int] = [:]
     @Published var showQuizResults: Bool = false
+    @Published var inQuizMode: Bool = false
+    @Published var completedModuleIDs: Set<UUID> = []
 
     var currentStep: TutorialStep? {
         guard let module = selectedModule,
@@ -21,12 +23,28 @@ class TutorialViewModel: ObservableObject {
     }
 
     var canGoPrevious: Bool {
-        return currentStepIndex > 0
+        return currentStepIndex > 0 && !inQuizMode
     }
 
     var progress: Double {
-        guard let module = selectedModule, !module.steps.isEmpty else { return 0 }
+        guard let module = selectedModule else { return 0 }
+
+        if inQuizMode {
+            return 1.0
+        }
+
+        guard !module.steps.isEmpty else { return 0 }
         return Double(currentStepIndex + 1) / Double(module.steps.count)
+    }
+
+    var moduleCompletionRatio: Double {
+        guard !modules.isEmpty else { return 0 }
+        return Double(completedModuleIDs.count) / Double(modules.count)
+    }
+
+    var isSelectedModuleCompleted: Bool {
+        guard let module = selectedModule else { return false }
+        return completedModuleIDs.contains(module.id)
     }
 
     func selectModule(_ module: TutorialModule) {
@@ -35,20 +53,46 @@ class TutorialViewModel: ObservableObject {
             currentStepIndex = 0
             quizAnswers = [:]
             showQuizResults = false
+            inQuizMode = false
         }
     }
 
     func nextStep() {
-        guard canGoNext else { return }
-        withAnimation(.easeInOut(duration: 0.3)) {
-            currentStepIndex += 1
+        guard let module = selectedModule else { return }
+
+        if canGoNext {
+            withAnimation(.easeInOut(duration: 0.25)) {
+                currentStepIndex += 1
+            }
+            return
+        }
+
+        if !module.quiz.isEmpty {
+            startQuiz()
+        } else {
+            markCurrentModuleCompleted()
         }
     }
 
     func previousStep() {
         guard canGoPrevious else { return }
-        withAnimation(.easeInOut(duration: 0.3)) {
+        withAnimation(.easeInOut(duration: 0.25)) {
             currentStepIndex -= 1
+        }
+    }
+
+    func startQuiz() {
+        guard let module = selectedModule, !module.quiz.isEmpty else { return }
+        withAnimation {
+            inQuizMode = true
+            showQuizResults = false
+        }
+    }
+
+    func exitQuiz() {
+        withAnimation {
+            inQuizMode = false
+            showQuizResults = false
         }
     }
 
@@ -60,6 +104,10 @@ class TutorialViewModel: ObservableObject {
         withAnimation {
             showQuizResults = true
         }
+
+        if let module = selectedModule {
+            completedModuleIDs.insert(module.id)
+        }
     }
 
     var quizScore: Int {
@@ -69,12 +117,28 @@ class TutorialViewModel: ObservableObject {
         }.count
     }
 
+    var isQuizComplete: Bool {
+        guard let module = selectedModule else { return false }
+        return module.quiz.allSatisfy { quizAnswers[$0.id] != nil }
+    }
+
+    func markCurrentModuleCompleted() {
+        guard let module = selectedModule else { return }
+        completedModuleIDs.insert(module.id)
+    }
+
+    func restartCurrentModule() {
+        guard let selectedModule else { return }
+        selectModule(selectedModule)
+    }
+
     func goBack() {
         withAnimation {
             selectedModule = nil
             currentStepIndex = 0
             quizAnswers = [:]
             showQuizResults = false
+            inQuizMode = false
         }
     }
 }

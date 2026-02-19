@@ -3,6 +3,9 @@ import SwiftUI
 // MARK: - Settings View
 struct SettingsView: View {
     @EnvironmentObject var preferences: PreferencesService
+    @EnvironmentObject var liveProcessStore: LiveProcessWhatIfStore
+
+    private let liveRefreshOptions: [Double] = [2, 5, 10]
 
     var body: some View {
         TabView {
@@ -16,7 +19,7 @@ struct SettingsView: View {
                     Label("Display", systemImage: "paintbrush")
                 }
         }
-        .frame(width: 450, height: 300)
+        .frame(width: 500, height: 420)
     }
 
     private var generalSettings: some View {
@@ -35,6 +38,34 @@ struct SettingsView: View {
 
             Section("Interface") {
                 Toggle("Show tooltips", isOn: $preferences.showTooltips)
+                Toggle("Show learning coach panels", isOn: $preferences.showLearningCoach)
+            }
+
+            Section("Live Snapshot What-If") {
+                Toggle("Enable auto-refresh for live what-if", isOn: Binding(
+                    get: { preferences.liveWhatIfAutoRefreshEnabled },
+                    set: { newValue in
+                        preferences.liveWhatIfAutoRefreshEnabled = newValue
+                        liveProcessStore.autoRefreshEnabled = newValue
+                    }
+                ))
+
+                Picker("Refresh Interval", selection: Binding(
+                    get: { preferences.liveWhatIfRefreshIntervalSeconds },
+                    set: { newValue in
+                        preferences.liveWhatIfRefreshIntervalSeconds = newValue
+                        liveProcessStore.refreshIntervalSeconds = newValue
+                    }
+                )) {
+                    ForEach(liveRefreshOptions, id: \.self) { option in
+                        Text("\(Int(option)) seconds").tag(option)
+                    }
+                }
+                .disabled(!preferences.liveWhatIfAutoRefreshEnabled)
+
+                Text("Applies to Simulator and Comparison live snapshot mode.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
         }
         .formStyle(.grouped)

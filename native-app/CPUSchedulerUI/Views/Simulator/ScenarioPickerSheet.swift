@@ -62,7 +62,7 @@ struct ScenarioPickerSheet: View {
                 Button(action: {
                     if let name = selectedScenario,
                        let scenario = MockDataService.scenarios.first(where: { $0.name == name }) {
-                        viewModel.loadScenario(scenario.processes)
+                        viewModel.loadScenario(scenario.processes, name: scenario.name)
                     }
                     dismiss()
                 }) {

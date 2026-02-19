@@ -1,6 +1,12 @@
 import SwiftUI
 import Combine
 
+enum ProcessInputSource: Equatable {
+    case manual
+    case scenario(String)
+    case liveSnapshot(Date)
+}
+
 // MARK: - Simulator View Model
 class SimulatorViewModel: ObservableObject {
     @Published var processes: [SchedulerProcess] = []
@@ -9,6 +15,9 @@ class SimulatorViewModel: ObservableObject {
     @Published var currentResult: SchedulingResult?
     @Published var isRunning = false
     @Published var animationProgress: Double = 0
+    @Published var inputSource: ProcessInputSource = .manual
+
+    private let backendService = BackendSchedulingService.shared
 
     func addProcess(arrivalTime: Int, burstTime: Int, priority: Int) {
         let newProcess = SchedulerProcess(
@@ -19,14 +28,28 @@ class SimulatorViewModel: ObservableObject {
         )
         withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
             processes.append(newProcess)
+            inputSource = .manual
         }
     }
 
     func removeProcess(_ process: SchedulerProcess) {
+        let wasLiveSnapshot: Bool
+        if case .liveSnapshot = inputSource {
+            wasLiveSnapshot = true
+        } else {
+            wasLiveSnapshot = false
+        }
+
         withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
             processes.removeAll { $0.id == process.id }
+            if !wasLiveSnapshot {
+                inputSource = .manual
+            }
         }
-        // Re-number processes
+        // Re-number only for manually authored process sets.
+        if wasLiveSnapshot {
+            return
+        }
         for i in processes.indices {
             processes[i].processID = i + 1
             processes[i].name = "P\(i + 1)"
@@ -39,14 +62,25 @@ class SimulatorViewModel: ObservableObject {
             processes.removeAll()
             currentResult = nil
             animationProgress = 0
+            inputSource = .manual
         }
     }
 
-    func loadScenario(_ scenario: [SchedulerProcess]) {
+    func loadScenario(_ scenario: [SchedulerProcess], name: String = "Scenario") {
         withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
             processes = scenario
             currentResult = nil
             animationProgress = 0
+            inputSource = .scenario(name)
+        }
+    }
+
+    func loadLiveSnapshot(processes: [SchedulerProcess], captureTime: Date) {
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+            self.processes = processes
+            currentResult = nil
+            animationProgress = 0
+            inputSource = .liveSnapshot(captureTime)
         }
     }
 
@@ -64,6 +98,7 @@ class SimulatorViewModel: ObservableObject {
             processes = newProcesses
             currentResult = nil
             animationProgress = 0
+            inputSource = .manual
         }
     }
 
@@ -76,8 +111,8 @@ class SimulatorViewModel: ObservableObject {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in
             guard let self = self else { return }
 
-            let result = MockDataService.shared.generateMockResult(
-                for: self.selectedAlgorithm,
+            let result = self.backendService.schedule(
+                algorithm: self.selectedAlgorithm,
                 processes: self.processes,
                 timeQuantum: self.timeQuantum
             )

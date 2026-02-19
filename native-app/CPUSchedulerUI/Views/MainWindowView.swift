@@ -2,6 +2,8 @@ import SwiftUI
 
 // MARK: - Main Window View
 struct MainWindowView: View {
+    @EnvironmentObject private var preferences: PreferencesService
+
     @State private var selectedTab: Tab = .simulator
     @State private var columnVisibility: NavigationSplitViewVisibility = .automatic
 
@@ -18,16 +20,25 @@ struct MainWindowView: View {
             case .simulator: return "cpu"
             case .comparison: return "chart.bar.xaxis"
             case .monitor: return "waveform.path.ecg"
-            case .education: return "book.fill"
+            case .education: return "book.closed"
             }
         }
 
         var subtitle: String {
             switch self {
-            case .simulator: return "Run scheduling algorithms"
-            case .comparison: return "Compare algorithms side by side"
-            case .monitor: return "View system processes"
-            case .education: return "Tutorials & quizzes"
+            case .simulator: return "Run manual or live snapshot what-if scheduling"
+            case .comparison: return "Compare algorithm tradeoffs on one snapshot"
+            case .monitor: return "Observe real process activity"
+            case .education: return "Interactive lessons and quizzes"
+            }
+        }
+
+        var keyboardHint: String {
+            switch self {
+            case .simulator: return "1"
+            case .comparison: return "2"
+            case .monitor: return "3"
+            case .education: return "4"
             }
         }
     }
@@ -44,75 +55,127 @@ struct MainWindowView: View {
     // MARK: - Sidebar
     private var sidebar: some View {
         VStack(spacing: 0) {
-            // App branding
-            VStack(spacing: 6) {
-                ZStack {
-                    Circle()
-                        .fill(.linearGradient(
-                            colors: [.blue, .purple],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ))
-                        .frame(width: 52, height: 52)
+            VStack(alignment: .leading, spacing: 10) {
+                HStack(spacing: 10) {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .fill(.quaternary)
+                            .frame(width: 38, height: 38)
+                        Image(systemName: "cpu.fill")
+                            .font(.headline)
+                            .foregroundStyle(Color.accentColor)
+                    }
 
-                    Image(systemName: "cpu.fill")
-                        .font(.system(size: 24))
-                        .foregroundStyle(.white)
-                        .symbolRenderingMode(.hierarchical)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("CPU Scheduler")
+                            .font(.headline)
+                        Text("macOS Learning Studio")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
 
-                Text("CPU Scheduler")
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
-
-                Text("Visualizer")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                if preferences.showTooltips {
+                    Label("Hover cards and labels for live explanations", systemImage: "lightbulb")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
             }
-            .padding(.vertical, 20)
-            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 14)
 
             Divider()
-                .padding(.horizontal)
 
-            // Navigation Items
-            List(Tab.allCases, selection: $selectedTab) { tab in
-                NavigationLink(value: tab) {
-                    Label {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(tab.rawValue)
-                                .font(.body.weight(.medium))
-                            Text(tab.subtitle)
-                                .font(.caption2)
-                                .foregroundStyle(.secondary)
+            List(selection: $selectedTab) {
+                Section("Workspace") {
+                    ForEach(Tab.allCases) { tab in
+                        HStack(spacing: 10) {
+                            Image(systemName: tab.icon)
+                                .frame(width: 18)
+                                .foregroundStyle(selectedTab == tab ? Color.accentColor : .secondary)
+
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(tab.rawValue)
+                                    .font(.body.weight(.medium))
+                                Text(tab.subtitle)
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                            }
+
+                            Spacer()
+
+                            Text(tab.keyboardHint)
+                                .font(.caption2.monospacedDigit())
+                                .foregroundStyle(.tertiary)
                         }
-                    } icon: {
-                        Image(systemName: tab.icon)
-                            .foregroundStyle(selectedTab == tab ? .blue : .secondary)
-                            .symbolRenderingMode(.hierarchical)
+                        .padding(.vertical, 2)
+                        .tag(tab)
                     }
-                    .padding(.vertical, 2)
                 }
             }
             .listStyle(.sidebar)
 
-            Spacer()
+            Divider()
 
-            // Footer
-            VStack(spacing: 6) {
-                Divider()
-                    .padding(.horizontal)
-
-                HStack(spacing: 6) {
-                    Image(systemName: "info.circle")
-                        .font(.caption2)
-                    Text("v1.0.0 · macOS")
-                        .font(.caption2)
-                }
-                .foregroundStyle(.tertiary)
-                .padding(.bottom, 12)
-            }
+            learningSpotlight
+                .padding(12)
         }
-        .navigationSplitViewColumnWidth(min: 200, ideal: 230, max: 280)
+        .navigationSplitViewColumnWidth(min: 225, ideal: 255, max: 290)
+    }
+
+    private var learningSpotlight: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("Learning Spotlight", systemImage: "sparkles")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+
+            Text(spotlightTitle)
+                .font(.subheadline.weight(.semibold))
+
+            Text(spotlightBody)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(3)
+
+            Button {
+                selectedTab = .education
+            } label: {
+                Label("Open Learn", systemImage: "arrow.right")
+                    .font(.caption.weight(.semibold))
+            }
+            .buttonStyle(.link)
+            .help("Jump to the interactive learning section")
+        }
+        .padding(10)
+        .background(Color(nsColor: .controlBackgroundColor))
+        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+    }
+
+    private var spotlightTitle: String {
+        switch selectedTab {
+        case .simulator:
+            return "Watch Context Switches"
+        case .comparison:
+            return "Find the Best Tradeoff"
+        case .monitor:
+            return "Real Process Behavior"
+        case .education:
+            return "Knowledge Check"
+        }
+    }
+
+    private var spotlightBody: String {
+        switch selectedTab {
+        case .simulator:
+            return "Use Live Snapshot controls to map real processes into what-if arrivals and bursts, then inspect popovers."
+        case .comparison:
+            return "Compare the same live process set across algorithms and inspect the baseline card for modeling assumptions."
+        case .monitor:
+            return "Sort by CPU and inspect per-process memory and thread counts from live system data."
+        case .education:
+            return "Complete modules and quizzes to reinforce FCFS, SJF, RR, and Priority behavior."
+        }
     }
 
     // MARK: - Detail

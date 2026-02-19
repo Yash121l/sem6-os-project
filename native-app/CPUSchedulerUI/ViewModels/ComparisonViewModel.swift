@@ -8,6 +8,9 @@ class ComparisonViewModel: ObservableObject {
     @Published var timeQuantum: Int = 4
     @Published var results: [SchedulingResult] = []
     @Published var isRunning = false
+    @Published var inputSource: ProcessInputSource = .manual
+
+    private let backendService = BackendSchedulingService.shared
 
     var selectedAlgorithmInfos: [AlgorithmInfo] {
         AlgorithmInfo.all.filter { selectedAlgorithms.contains($0.id) }
@@ -21,10 +24,19 @@ class ComparisonViewModel: ObservableObject {
         }
     }
 
-    func loadScenario(_ scenario: [SchedulerProcess]) {
+    func loadScenario(_ scenario: [SchedulerProcess], name: String = "Scenario") {
         withAnimation {
             processes = scenario
             results = []
+            inputSource = .scenario(name)
+        }
+    }
+
+    func loadLiveSnapshot(processes: [SchedulerProcess], captureTime: Date) {
+        withAnimation {
+            self.processes = processes
+            results = []
+            inputSource = .liveSnapshot(captureTime)
         }
     }
 
@@ -40,6 +52,7 @@ class ComparisonViewModel: ObservableObject {
         }
         withAnimation {
             results = []
+            inputSource = .manual
         }
     }
 
@@ -49,13 +62,11 @@ class ComparisonViewModel: ObservableObject {
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             guard let self = self else { return }
-            let newResults = self.selectedAlgorithmInfos.map { algo in
-                MockDataService.shared.generateMockResult(
-                    for: algo,
-                    processes: self.processes,
-                    timeQuantum: self.timeQuantum
-                )
-            }
+            let newResults = self.backendService.compare(
+                algorithms: self.selectedAlgorithmInfos,
+                processes: self.processes,
+                timeQuantum: self.timeQuantum
+            )
             withAnimation(.spring(response: 0.5, dampingFraction: 0.85)) {
                 self.results = newResults
                 self.isRunning = false
