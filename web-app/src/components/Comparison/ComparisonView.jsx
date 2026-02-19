@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import useSchedulerStore from '../../hooks/useScheduler';
 import { ALGORITHMS } from '../../utils/constants';
 import * as algorithms from '../../algorithms';
@@ -79,6 +79,8 @@ const ComparisonView = () => {
           avgTurnaroundTime: 0,
           avgWaitingTime: 0,
           avgResponseTime: 0,
+          throughput: 0,
+          cpuUtilization: 0,
         };
       }
     });
@@ -86,7 +88,7 @@ const ComparisonView = () => {
 
   if (processes.length === 0) {
     return (
-      <Card className="text-center py-10 bg-muted/20 border-border border-dashed shadow-none">
+      <Card className="glass-panel border-dashed py-10 text-center shadow-none">
         <CardContent className="text-muted-foreground">
           Please add processes in the Visualizer tab first.
         </CardContent>
@@ -96,7 +98,7 @@ const ComparisonView = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      <Card className="border-border shadow-sm">
+      <Card className="glass-panel">
         <CardHeader>
           <CardTitle>Metrics Comparison (Lower is Better)</CardTitle>
         </CardHeader>
@@ -154,24 +156,25 @@ const ComparisonView = () => {
         </CardContent>
       </Card>
 
-      <Card className="border-border shadow-sm">
+      <Card className="glass-panel">
         <CardHeader>
           <CardTitle>Detailed Metrics</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow className="bg-muted hover:bg-muted font-medium">
+              <TableRow className="bg-muted/60 hover:bg-muted/60 font-medium">
                 <TableHead>Algorithm</TableHead>
                 <TableHead>Avg Turnaround</TableHead>
                 <TableHead>Avg Waiting</TableHead>
                 <TableHead>Avg Response</TableHead>
+                <TableHead>CPU Utilization</TableHead>
                 <TableHead>Throughput</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {comparisonData.map((data) => (
-                <TableRow key={data.name} className="hover:bg-muted/50">
+                <TableRow key={data.name} className="hover:bg-muted/40">
                   <TableCell className="font-medium text-foreground">
                     {data.name}
                   </TableCell>
@@ -183,6 +186,9 @@ const ComparisonView = () => {
                   </TableCell>
                   <TableCell className="text-muted-foreground">
                     {data.avgResponseTime.toFixed(3)}
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {data.cpuUtilization.toFixed(1)}%
                   </TableCell>
                   <TableCell className="text-muted-foreground">
                     {data.throughput.toFixed(3)}

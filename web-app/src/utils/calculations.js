@@ -39,3 +39,12 @@ export const calculateSystemMetrics = (processes, totalTime) => {
     throughput,
   };
 };
+
+export const calculateContextSwitches = (timeline = []) => {
+  if (!timeline || timeline.length < 2) return 0;
+
+  return timeline.slice(1).reduce((switches, segment, index) => {
+    const previous = timeline[index];
+    return previous.processId === segment.processId ? switches : switches + 1;
+  }, 0);
+};

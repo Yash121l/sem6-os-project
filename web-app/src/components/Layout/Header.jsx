@@ -1,56 +1,83 @@
-import React from 'react';
-import { Moon, Sun, Github, Menu } from 'lucide-react';
+import { Cpu, Github, Moon, Sun } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import clsx from 'clsx';
 
-const Header = ({ onMenuClick }) => {
+const Header = () => {
   const { isDarkMode, toggleTheme } = useTheme();
+  const navItems = [
+    { path: '/visualizer', label: 'Simulator' },
+    { path: '/comparison', label: 'Comparison' },
+    { path: '/algorithms', label: 'Learn' },
+  ];
 
   return (
-    <header className="bg-background border-b border-border px-4 md:px-6 py-4 flex items-center justify-between sticky top-0 z-50">
-      <div className="flex items-center gap-3">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onMenuClick}
-          className="md:hidden"
-        >
-          <Menu className="h-6 w-6" />
-        </Button>
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold shadow-lg shadow-primary/30">
-            CPU
+    <header className="app-header sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-md">
+      <div className="flex w-full items-center justify-between px-4 py-3 md:px-6 lg:px-8">
+        <div className="min-w-0 flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/25 overflow-hidden">
+            <img
+              src="/favicon.png"
+              alt="Logo"
+              className="h-full w-full object-cover"
+            />
           </div>
-          <h1 className="text-xl font-bold tracking-tight hidden sm:block">
-            Scheduling Visualizer
-          </h1>
-          <h1 className="text-xl font-bold tracking-tight sm:hidden">
-            Scheduler
-          </h1>
+          <div className="hidden min-w-0 leading-tight sm:block">
+            <h1 className="truncate text-sm font-semibold tracking-tight">
+              CPU Scheduler
+            </h1>
+            <p className="text-xs text-muted-foreground">Scheduling Visualizer</p>
+          </div>
+          <Badge variant="outline" className="hidden border-border/80 bg-card/60 md:inline-flex">
+            v1.0
+          </Badge>
         </div>
-      </div>
-      <div className="flex items-center gap-2">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={toggleTheme}
-          title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-        >
-          {isDarkMode ? (
-            <Sun className="h-5 w-5" />
-          ) : (
-            <Moon className="h-5 w-5" />
-          )}
-        </Button>
-        <Button variant="ghost" size="icon" asChild>
-          <a
-            href="https://github.com/Yash121l/sem6-os-project"
-            target="_blank"
-            rel="noopener noreferrer"
+
+        <nav className="hidden items-center gap-1 rounded-full border border-border/80 bg-card/60 p-1 md:flex">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) =>
+                clsx(
+                  'rounded-full px-3 py-1.5 text-xs font-medium transition-colors',
+                  isActive
+                    ? 'bg-primary/20 text-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                )
+              }
+            >
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            className="text-muted-foreground hover:text-foreground"
           >
-            <Github className="h-5 w-5" />
-          </a>
-        </Button>
+            {isDarkMode ? (
+              <Sun className="h-4 w-4" />
+            ) : (
+              <Moon className="h-4 w-4" />
+            )}
+          </Button>
+          <Button variant="ghost" size="icon" asChild>
+            <a
+              href="https://github.com/Yash121l/sem6-os-project"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Github className="h-4 w-4" />
+            </a>
+          </Button>
+        </div>
       </div>
     </header>
   );

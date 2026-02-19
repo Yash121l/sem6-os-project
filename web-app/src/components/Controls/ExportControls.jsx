@@ -1,4 +1,3 @@
-import React from 'react';
 import { Download, FileText } from 'lucide-react';
 import useSchedulerStore from '../../hooks/useScheduler';
 import { exportToCSV, downloadJSON } from '../../utils/export';
@@ -45,21 +44,21 @@ const ExportControls = () => {
         variant="outline"
         onClick={handleExportCSV}
         disabled={!results}
-        className="gap-2"
+        className="h-8 gap-2 rounded-lg"
         size="sm"
       >
         <FileText className="h-4 w-4" />
-        Export CSV
+        CSV
       </Button>
       <Button
         variant="outline"
         onClick={handleExportJSON}
         disabled={!results}
-        className="gap-2"
+        className="h-8 gap-2 rounded-lg"
         size="sm"
       >
         <Download className="h-4 w-4" />
-        Save JSON
+        JSON
       </Button>
     </div>
   );

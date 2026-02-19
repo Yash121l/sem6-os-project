@@ -55,56 +55,197 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --app-header-height: 64px;
+    --background: 220 33% 98%;
+    --foreground: 220 21% 15%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 220 21% 15%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
+    --popover-foreground: 220 21% 15%;
+    --primary: 212 92% 55%;
     --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
+    --secondary: 210 30% 95%;
+    --secondary-foreground: 222 20% 24%;
+    --muted: 214 26% 94%;
+    --muted-foreground: 215 11% 46%;
+    --accent: 208 44% 93%;
+    --accent-foreground: 220 24% 18%;
+    --destructive: 0 72% 52%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
+    --border: 214 26% 86%;
+    --input: 214 26% 86%;
+    --ring: 212 92% 55%;
+    --radius: 0.75rem;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --background: 224 27% 9%;
+    --foreground: 210 28% 95%;
+    --card: 224 24% 12%;
+    --card-foreground: 210 28% 95%;
+    --popover: 224 24% 12%;
+    --popover-foreground: 210 28% 95%;
+    --primary: 213 94% 66%;
+    --primary-foreground: 222 32% 10%;
+    --secondary: 223 18% 18%;
+    --secondary-foreground: 212 23% 92%;
+    --muted: 223 16% 17%;
+    --muted-foreground: 216 12% 68%;
+    --accent: 223 18% 20%;
+    --accent-foreground: 212 23% 92%;
+    --destructive: 0 68% 44%;
+    --destructive-foreground: 212 23% 92%;
+    --border: 223 16% 24%;
+    --input: 223 16% 24%;
+    --ring: 213 94% 66%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+    min-height: 100%;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'SF Pro Text', 'SF Pro Display', 'Avenir Next', 'Segoe UI',
+      sans-serif;
+    background-image:
+      radial-gradient(circle at 20% 0%, rgba(37, 99, 235, 0.09), transparent 36%),
+      radial-gradient(circle at 80% 10%, rgba(14, 165, 233, 0.08), transparent
+            32%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.78) 0%,
+            rgba(255, 255, 255, 0.65) 30%, rgba(249, 251, 255, 0.52) 100%);
+    background-attachment: fixed;
+    overflow: hidden;
+  }
+
+  .dark body {
+    background-image:
+      radial-gradient(circle at 20% 0%, rgba(59, 130, 246, 0.2), transparent 40%),
+      radial-gradient(circle at 85% 5%, rgba(14, 165, 233, 0.14), transparent
+            34%),
+      linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.92)
+            100%);
+  }
+}
+
+@layer components {
+  .app-shell {
+    height: 100vh;
+    background-image:
+      radial-gradient(circle at 10% 0%, rgba(56, 189, 248, 0.12), transparent 40%),
+      radial-gradient(circle at 90% 5%, rgba(59, 130, 246, 0.14), transparent 38%);
+  }
+
+  .simulator-shell {
+    display: flex;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid hsl(var(--border) / 0.75);
+    border-radius: 16px;
+    background: hsl(var(--card) / 0.5);
+    backdrop-filter: blur(14px);
+  }
+
+  .simulator-toolbar {
+    background-image: linear-gradient(
+      90deg,
+      hsl(var(--card) / 0.95),
+      hsl(var(--card) / 0.78)
+    );
+  }
+
+  .simulator-process-pane {
+    background-image: linear-gradient(
+      180deg,
+      hsl(var(--card) / 0.75),
+      hsl(var(--card) / 0.55)
+    );
+  }
+
+  .app-header {
+    min-height: var(--app-header-height);
+    background-image: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.92) 0%,
+      rgba(248, 250, 252, 0.88) 48%,
+      rgba(241, 245, 249, 0.86) 100%
+    );
+  }
+
+  .dark .app-header {
+    background-image: linear-gradient(
+      90deg,
+      rgba(17, 24, 39, 0.92) 0%,
+      rgba(15, 23, 42, 0.9) 48%,
+      rgba(17, 24, 39, 0.9) 100%
+    );
+  }
+
+  .app-shell::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.14),
+      transparent 22%
+    );
+    z-index: 0;
+  }
+
+  .glass-panel {
+    @apply border border-border/70 bg-card/85 shadow-sm backdrop-blur-md;
+    box-shadow: 0 12px 38px -24px rgba(15, 23, 42, 0.6);
+  }
+}
+
+@media (max-width: 1024px) {
+  .simulator-body {
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .simulator-process-pane {
+    width: 100%;
+    max-height: 48%;
+    min-height: 270px;
+  }
+}
+
+@layer utilities {
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    background-color: hsl(var(--border));
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground));
   }
 }

@@ -20,7 +20,7 @@ export const PROCESS_COLORS = [
   '#C0392B',
 ];
 
-export const DEFAULT_QUANTUM = 2;
+export const DEFAULT_QUANTUM = 4;
 export const MAX_PROCESSES = 20;
 export const MIN_BURST_TIME = 1;
 export const MAX_BURST_TIME = 20;

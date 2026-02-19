@@ -34,46 +34,38 @@ const useSchedulerStore = create(
       results: null,
 
       setProcesses: (processes) => {
-        set({ processes });
-        get().runScheduler();
+        set({ processes, results: null });
       },
 
       addProcess: (process) => {
-        set((state) => {
-          const newProcesses = [...state.processes, process];
-          return { processes: newProcesses };
-        });
-        get().runScheduler();
+        set((state) => ({
+          processes: [...state.processes, process],
+          results: null,
+        }));
       },
 
       removeProcess: (processId) => {
-        set((state) => {
-          const newProcesses = state.processes.filter(
-            (p) => p.id !== processId
-          );
-          return { processes: newProcesses };
-        });
-        get().runScheduler();
+        set((state) => ({
+          processes: state.processes.filter((p) => p.id !== processId),
+          results: null,
+        }));
       },
 
       updateProcess: (processId, field, value) => {
-        set((state) => {
-          const newProcesses = state.processes.map((p) =>
+        set((state) => ({
+          processes: state.processes.map((p) =>
             p.id === processId ? { ...p, [field]: value } : p
-          );
-          return { processes: newProcesses };
-        });
-        get().runScheduler();
+          ),
+          results: null,
+        }));
       },
 
       setAlgorithm: (algorithm) => {
-        set({ selectedAlgorithm: algorithm });
-        get().runScheduler();
+        set({ selectedAlgorithm: algorithm, results: null });
       },
 
       setQuantum: (quantum) => {
-        set({ quantum });
-        get().runScheduler();
+        set({ quantum, results: null });
       },
 
       runScheduler: () => {
@@ -125,15 +117,10 @@ const useSchedulerStore = create(
         quantum: state.quantum,
       }), // only persist these fields
       onRehydrateStorage: () => (state) => {
-        if (state) {
-          state.runScheduler();
-        }
+        if (state) state.results = null;
       },
     }
   )
 );
-
-// Initialize results on load
-setTimeout(() => useSchedulerStore.getState().runScheduler(), 0);
 
 export default useSchedulerStore;
