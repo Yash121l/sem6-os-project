@@ -92,5 +92,5 @@ This project is part of an academic OS course assignment.
 
 ## Authors
 
-- Native App Development
+- Native App Development ([@r69shabh](https://github.com/r69shabh))
 - Web App Development ([@Yash121l](https://github.com/Yash121l))
