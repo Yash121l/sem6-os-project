@@ -7,9 +7,11 @@ A comprehensive CPU scheduling simulation and visualization project with both we
 This repository contains two main applications:
 
 ### 📱 Native App (`/native-app`)
-A macOS native application built with SwiftUI that provides CPU scheduling simulation and visualization.
+
+A macOS native application built with SwiftUI (frontend in `app`) and C/C++ (backend in `backend`) that provides CPU scheduling simulation and visualization.
 
 **Features:**
+
 - Interactive CPU scheduling simulator
 - Support for multiple scheduling algorithms (FCFS, SJF, Priority, Round Robin, etc.)
 - Real-time Gantt chart visualization
@@ -19,21 +21,26 @@ A macOS native application built with SwiftUI that provides CPU scheduling simul
 - Educational tutorials
 
 **Tech Stack:**
+
 - Swift
 - SwiftUI
+- C/C++ (Backend)
 - macOS native APIs
 
 **Getting Started:**
+
 ```bash
-cd native-app
+cd native-app/app
 # Open in Xcode
 open CPUSchedulerUI.xcodeproj
 ```
 
 ### 🌐 Web App (`/web-app`)
+
 A modern web application built with React and Vite for CPU scheduling simulation and learning.
 
 **Features:**
+
 - Interactive web-based scheduling simulator
 - Multiple scheduling algorithms implementation
 - Visual Gantt charts and metrics
@@ -43,12 +50,14 @@ A modern web application built with React and Vite for CPU scheduling simulation
 - Responsive design
 
 **Tech Stack:**
+
 - React
 - Vite
 - TailwindCSS
 - Shadcn UI
 
 **Getting Started:**
+
 ```bash
 cd web-app
 npm install

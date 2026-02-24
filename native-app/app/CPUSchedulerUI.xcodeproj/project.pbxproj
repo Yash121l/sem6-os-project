@@ -108,7 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				E10002 /* CPUSchedulerUI */,
-				E10021 /* CPUSchedulerBackend */,
+				E10021 /* backend */,
 				E10020 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -179,7 +179,7 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
-		E10021 /* CPUSchedulerBackend */ = {
+		E10021 /* backend */ = {
 			isa = PBXGroup;
 			children = (
 				B10032 /* SchedulerBridge.mm */,
@@ -190,7 +190,7 @@
 				B10037 /* process_monitor.c */,
 				B10038 /* utils.c */,
 			);
-			path = ../CPUSchedulerBackend/Sources;
+			path = ../backend/Sources;
 			sourceTree = "<group>";
 		};
 		E10007 /* Simulator */ = {
@@ -530,9 +530,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../CPUSchedulerBackend/Sources/Core",
-					"$(SRCROOT)/../CPUSchedulerBackend/Sources/Bridge",
-					"$(SRCROOT)/../CPUSchedulerBackend/Sources/Include",
+					"$(SRCROOT)/../backend/Sources/Core",
+					"$(SRCROOT)/../backend/Sources/Bridge",
+					"$(SRCROOT)/../backend/Sources/Include",
 				);
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -567,9 +567,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../CPUSchedulerBackend/Sources/Core",
-					"$(SRCROOT)/../CPUSchedulerBackend/Sources/Bridge",
-					"$(SRCROOT)/../CPUSchedulerBackend/Sources/Include",
+					"$(SRCROOT)/../backend/Sources/Core",
+					"$(SRCROOT)/../backend/Sources/Bridge",
+					"$(SRCROOT)/../backend/Sources/Include",
 				);
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";

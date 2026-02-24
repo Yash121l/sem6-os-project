@@ -10,6 +10,9 @@ let package = Package(
         .executableTarget(
             name: "CPUSchedulerUI",
             path: "CPUSchedulerUI",
+            exclude: [
+                "CPUSchedulerUI.entitlements"
+            ],
             resources: [
                 .process("Resources")
             ],
